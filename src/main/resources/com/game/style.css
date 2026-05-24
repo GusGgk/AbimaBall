@@ -1,252 +1,144 @@
-/* =========================================================================
-   ARCADE OVERDRIVE v1.0 - PIXEL ART PROFESSIONAL
-
-   REGRAS IMPOSTAS:
-   ✓ Sem gradientes (linear-gradient, radial-gradient)
-   ✓ Sem anti-aliasing (font-smoothing: none)
-   ✓ Sem blur (dropshadow com blur 0 apenas)
-   ✓ Todos os valores em múltiplos de 4px
-   ✓ Cores 100% puras (sem rgba/transparência desnecessária)
-   ========================================================================= */
-
-/* =========================================================================
-   PALETA DE CORES PIXEL (Cores de arcade real)
-   ========================================================================= */
-   /* Fundos: #0a0c12 (azul profundo CRT), #000000 (preto absoluto)
-      Texto Principal: #f0f0f0
-      Dourado Arcade: #f7d44a
-      Sinal Verde: #00ff41
-      Alerta Vermelho: #ff0044
-      Ciano Neon: #00e5ff
-      Magenta/Violência: #ff00aa
-   ========================================================================= */
-
-/* =========================================================================
-   TELA DE MENU PRINCIPAL - "CRT VACUUM"
-   ========================================================================= */
 .fundo-menu {
-    -fx-background-color: #0a0c12;  /* Azul muito escuro, parece CRT desligado */
+    -fx-background-image: url("sprites/BACKGROUND.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
 }
 
-/* TÍTULO - Efeito "ARCADE LETTERS" com 3 sombras pixeladas */
 .titulo-jogo {
-    -fx-font-size: 72px;  /* Múltiplo de 8 */
+    -fx-font-size: 72px;
     -fx-font-family: "Press Start 2P", "Courier New", monospace;
     -fx-font-weight: bold;
-    -fx-text-fill: #f7d44a;  /* Dourado arcade clássico */
-
-    /* Sombra padrão CRT - sem blur, apenas deslocamento */
+    -fx-text-fill: #f7d44a;
     -fx-effect: dropshadow(gaussian, #000000, 0, 0, 8, 8);
-
-    /* Espaçamento pixel-perfect */
     -fx-letter-spacing: 4px;
     -fx-padding: 24px 0 48px 0;
-
-    /* Forçar renderização sem suavização */
     -fx-font-smoothing-type: gray;
 }
 
-/* BOTÃO PRINCIPAL - "CRT BUTTON" padrão arcade */
 .botao-menu {
-    /* Dimensões baseadas em grid 8x8 */
     -fx-min-width: 280px;
     -fx-pref-width: 280px;
     -fx-min-height: 72px;
     -fx-pref-height: 72px;
-
-    /* Cores sólidas */
     -fx-background-color: #1a1c22;
     -fx-text-fill: #f7d44a;
-
-    /* Fonte pixel */
     -fx-font-size: 20px;
     -fx-font-family: "Press Start 2P", "Courier New", monospace;
     -fx-font-smoothing-type: gray;
-
-    /* Bordas pixeladas - simula borda CRT 3D */
     -fx-border-color: #f7d44a #8b6914 #8b6914 #f7d44a;
     -fx-border-width: 6px;
     -fx-border-style: solid;
-
-    /* Cantos retos (pixel art) */
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-
-    /* Espaçamento interno */
     -fx-padding: 16px 24px;
-
-    /* Efeito cursor */
     -fx-cursor: hand;
 }
 
-/* Hover: Efeito "SELEÇÃO ATIVA" - inverte cores como CRT piscando */
 .botao-menu:hover {
     -fx-background-color: #f7d44a;
     -fx-text-fill: #0a0c12;
-
-    /* Borda invertida para efeito de profundidade */
     -fx-border-color: #ffffff #8b6914 #8b6914 #ffffff;
-
-    /* Leve escala pixel (múltiplo de 4) */
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
 }
 
-/* Press: Efeito "BUTTON PRESS" com deslocamento físico */
 .botao-menu:pressed {
     -fx-background-color: #c4a02a;
     -fx-text-fill: #0a0c12;
-
-    /* Deslocamento em grid 8px */
     -fx-translate-x: 4px;
     -fx-translate-y: 4px;
-
-    /* Borda pressionada */
     -fx-border-color: #8b6914 #f7d44a #f7d44a #8b6914;
-
     -fx-scale-x: 1.0;
     -fx-scale-y: 1.0;
 }
 
-/* =========================================================================
-   TELA DE SELEÇÃO DE PERSONAGENS
-   ========================================================================= */
 .selecao-fundo {
-    -fx-background-color: #0a0c12;
-
-    /* Linhas de scan CRT opcionais (apenas cor sólida alternativa) */
+    -fx-background-image: url("sprites/BACKGROUND.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
 }
 
 .titulo-selecao {
     -fx-font-size: 32px;
     -fx-font-family: "Press Start 2P", "Courier New", monospace;
-    -fx-text-fill: #00ff41;  /* Verde matrix puro */
+    -fx-text-fill: #00ff41;
     -fx-font-smoothing-type: gray;
-
-    /* Sombra pixelada sem blur */
     -fx-effect: dropshadow(gaussian, #004d1a, 0, 0, 4, 4);
-
     -fx-padding: 24px 0 32px 0;
     -fx-letter-spacing: 2px;
 }
 
-/* CARD PERSONAGEM - estilo "ARCADE SELECT SCREEN" */
 .card-personagem {
-    /* Dimensões baseadas em grid 8px */
     -fx-min-width: 200px;
     -fx-pref-width: 200px;
     -fx-min-height: 260px;
     -fx-pref-height: 260px;
-
-    /* Fundo preto absoluto */
     -fx-background-color: #000000;
-
-    /* Padding interno seguindo grid */
     -fx-padding: 24px 16px 16px 16px;
-
-    /* Bordas múltiplas estilo moldura CRT */
     -fx-border-color: #00ff41 #00802b #00802b #00ff41;
     -fx-border-width: 6px;
     -fx-border-style: solid;
-
-    /* Cantos retos */
     -fx-background-radius: 0;
     -fx-border-radius: 0;
-
-    /* Espaçamento entre cards */
     -fx-spacing: 16px;
-
-    /* Cursor para indicar selecionável */
     -fx-cursor: hand;
 }
 
-/* Hover do card - efeito "BATTLE READY" */
 .card-personagem:hover {
-    /* Fundo muda para preto com leve tom de alerta */
     -fx-background-color: #0a0010;
-
-    /* Bordas mudam para vermelho arcade */
     -fx-border-color: #ff0044 #990029 #990029 #ff0044;
-
-    /* Escala em grid 8px */
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
-
-    /* Leve deslocamento para cima (8px) */
     -fx-translate-y: -4px;
 }
 
-/* Card selecionado (quando clicado/virar player) */
 .card-personagem:selected {
     -fx-background-color: #001a0a;
     -fx-border-color: #f7d44a #8b6914 #8b6914 #f7d44a;
-
-    /* Sombra externa pixelada */
     -fx-effect: dropshadow(gaussian, #f7d44a, 0, 0, 8, 8);
 }
 
-/* Labels dentro do card */
 .card-personagem .label,
 .card-personagem Label {
     -fx-text-fill: #00ff41;
     -fx-font-size: 14px;
     -fx-font-family: "Press Start 2P", "Courier New", monospace;
     -fx-font-smoothing-type: gray;
-
-    /* Padding pixel */
     -fx-padding: 16px 0 8px 0;
-
-    /* Fundo transparente */
     -fx-background-color: transparent;
-
-    /* Sombra para legibilidade */
     -fx-effect: dropshadow(gaussian, #000000, 0, 0, 2, 2);
 }
 
-/* Efeito especial para nome do personagem */
 .card-personagem .nome-personagem {
     -fx-text-fill: #f7d44a;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-padding: 8px 0 0 0;
+    -fx-padding: 16px 0 16px 0;
+    -fx-effect: dropshadow(gaussian, #000000, 0, 0, 4, 4);
 }
 
-/* =========================================================================
-   ESTILOS ADICIONAIS PIXEL - MELHORIAS PROFISSIONAIS
-   ========================================================================= */
-
-/* Divisor pixel estilo CRT */
 .divisor-pixel {
     -fx-background-color: #1a1c22;
     -fx-min-height: 4px;
     -fx-pref-height: 4px;
     -fx-max-height: 4px;
-
-    /* Padrão pixel de scanline */
-    -fx-background-image: repeating-linear-gradient(
-        to bottom,
-        #00ff41 0px,
-        #00ff41 1px,
-        transparent 1px,
-        transparent 4px
-    );
+    -fx-background-image: repeating-linear-gradient(to bottom, #00ff41 0px, #00ff41 1px, transparent 1px, transparent 4px);
     -fx-background-repeat: repeat-x;
 }
 
-/* Indicador de versão / FPS */
 .texto-status {
     -fx-text-fill: #00ff41;
     -fx-font-size: 10px;
     -fx-font-family: "Press Start 2P", "Courier New", monospace;
     -fx-font-smoothing-type: gray;
-
     -fx-padding: 8px;
     -fx-background-color: #000000;
     -fx-border-color: #00ff41;
     -fx-border-width: 2px;
 }
 
-/* ScrollBar estilo pixel (para futuras implementações) */
 .scroll-bar {
     -fx-background-color: #0a0c12;
     -fx-background-radius: 0;
@@ -265,7 +157,6 @@
     -fx-background-radius: 0;
 }
 
-/* Tooltip pixel style */
 .tooltip {
     -fx-background-color: #000000;
     -fx-text-fill: #00ff41;
@@ -277,4 +168,41 @@
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-padding: 8px;
+}
+
+.botao-card {
+    -fx-background-color: #1a1c22;
+    -fx-text-fill: #f7d44a;
+    -fx-font-size: 12px;
+    -fx-font-family: "Press Start 2P", "Courier New", monospace;
+    -fx-font-smoothing-type: gray;
+    -fx-border-color: #f7d44a #8b6914 #8b6914 #f7d44a;
+    -fx-border-width: 4px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 12px 16px;
+    -fx-cursor: hand;
+    -fx-min-width: 160px;
+}
+
+.botao-card:hover {
+    -fx-background-color: #f7d44a;
+    -fx-text-fill: #0a0c12;
+    -fx-border-color: #ffffff #8b6914 #8b6914 #ffffff;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.botao-card:pressed {
+    -fx-background-color: #c4a02a;
+    -fx-translate-x: 4px;
+    -fx-translate-y: 4px;
+    -fx-border-color: #8b6914 #f7d44a #f7d44a #8b6914;
+}
+
+.fundo-jogo {
+    -fx-background-image: url("sprites/BACKGROUND.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center center;
 }

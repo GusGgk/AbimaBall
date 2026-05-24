@@ -16,13 +16,13 @@ public class MenuPrincipal extends Application {
         titulo.getStyleClass().add("titulo-jogo");
 
         Button btnJogar = new Button("JOGAR");
-        btnJogar.getStyleClass().add("btn-menu");
+        btnJogar.getStyleClass().add("botao-menu");
 
         Button btnConfiguracoes = new Button("CONFIGURAÇÕES");
-        btnConfiguracoes.getStyleClass().add("btn-menu");
+        btnConfiguracoes.getStyleClass().add("botao-menu");
 
         Button btnSair = new Button("SAIR");
-        btnSair.getStyleClass().add("btn-menu");
+        btnSair.getStyleClass().add("botao-menu");
 
 
         btnJogar.setOnAction(evento ->{
@@ -40,7 +40,7 @@ public class MenuPrincipal extends Application {
         telaMenu.getChildren().addAll(titulo,btnJogar,btnConfiguracoes,btnSair); //anexa os componetnes criados
         telaMenu.getStyleClass().add("fundo-menu");
 
-        Scene scene =  new Scene(telaMenu,800,600);
+        Scene scene =  new Scene(telaMenu,1080,800);
 
         // verifica se o style.css está junto a pasta do Menu principal
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
