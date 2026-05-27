@@ -120,12 +120,11 @@
 }
 
 .divisor-pixel {
-    -fx-background-color: #1a1c22;
+    -fx-background-color: #1a1c22, #00ff41;
+    -fx-background-insets: 0, 0 0 2 0;
     -fx-min-height: 4px;
     -fx-pref-height: 4px;
     -fx-max-height: 4px;
-    -fx-background-image: repeating-linear-gradient(to bottom, #00ff41 0px, #00ff41 1px, transparent 1px, transparent 4px);
-    -fx-background-repeat: repeat-x;
 }
 
 .texto-status {

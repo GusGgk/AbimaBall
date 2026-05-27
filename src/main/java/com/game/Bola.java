@@ -10,9 +10,9 @@ public class Bola {
     private double velocidadeX = 0;
     private double velocidadeY = 0;
 
-    private final double gravidade = 0.6;
-    private final double atrito_ar = 0.99;
-    private final double quique = 0.75;
+    private final double gravidade = 0.25;
+    private final double atrito_ar = 0.995;
+    private final double quique = -0.60;
     private final double raio = 20;
 
     private ImageView sprite;
@@ -47,10 +47,10 @@ public class Bola {
         if (y + (raio * 2) >= alturaDoChao){
             //calcula exatamente em cima do chão para não afundar na terra
             y = alturaDoChao - (raio * 2);
-            //aplica o quique
-            velocidadeY = velocidadeY * quique;
-            //diminuindo o quique gradativo
-            if (Math.abs(velocidadeY) < 2.0){
+            //quica se a colisão for acima de 0.6
+            if (velocidadeY > 0.6) {
+                velocidadeY = velocidadeY * quique;
+            } else {
                 velocidadeY = 0;
             }
         }
@@ -61,7 +61,7 @@ public class Bola {
         sprite.setTranslateY(y);
 
         //troca de gif e foto
-        if (Math.abs(velocidadeX) > 1.0 || Math.abs(velocidadeY) > 1.0){
+        if (Math.abs(velocidadeX) > 0.5 || Math.abs(velocidadeY) > 1.5){
             if(sprite.getImage() != gifAnimado) sprite.setImage(gifAnimado);
         } else {
             if(sprite.getImage() != imagemParada) sprite.setImage(imagemParada);
