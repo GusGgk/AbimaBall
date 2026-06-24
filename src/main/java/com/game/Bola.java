@@ -37,22 +37,33 @@ public class Bola {
 
     public void aplicarFisica(){
         velocidadeY += gravidade;
-        velocidadeY += atrito_ar;
+
+        // CORREÇÃO: O atrito multiplica a velocidade X para ir freando a bola aos poucos
+        velocidadeX *= atrito_ar;
 
         x += velocidadeX;
         y += velocidadeY;
     }
 
     public void QuiqueChao(double alturaDoChao){
+        // Colisão com o chão
         if (y + (raio * 2) >= alturaDoChao){
-            //calcula exatamente em cima do chão para não afundar na terra
             y = alturaDoChao - (raio * 2);
-            //quica se a colisão for acima de 0.6
             if (velocidadeY > 0.6) {
                 velocidadeY = velocidadeY * quique;
             } else {
                 velocidadeY = 0;
             }
+        }
+
+        // Colisão com as paredes laterais (evita a bola sumir da tela)
+        if (x < 0) {
+            x = 0;
+            velocidadeX = -velocidadeX * 0.8; // Quica na parede esquerda
+        }
+        if (x + (raio * 2) > 1080) { // 1080 é a largura da sua tela
+            x = 1080 - (raio * 2);
+            velocidadeX = -velocidadeX * 0.8; // Quica na parede direita
         }
     }
 
@@ -60,13 +71,13 @@ public class Bola {
         sprite.setTranslateX(x);
         sprite.setTranslateY(y);
 
-        //troca de gif e foto
         if (Math.abs(velocidadeX) > 0.5 || Math.abs(velocidadeY) > 1.5){
             if(sprite.getImage() != gifAnimado) sprite.setImage(gifAnimado);
         } else {
             if(sprite.getImage() != imagemParada) sprite.setImage(imagemParada);
         }
     }
+
     public ImageView getSprite() {
         return sprite;
     }
@@ -80,4 +91,20 @@ public class Bola {
         return raio;
     }
 
+    // CORREÇÃO: Agora os métodos realmente alteram os valores da bola!
+    public void setVelocidadeX(double v) {
+        this.velocidadeX = v;
+    }
+
+    public void setVelocidadeY(double v) {
+        this.velocidadeY = v;
+    }
+
+    public void setX(double v) {
+        this.x = v;
+    }
+
+    public void setY(double v) {
+        this.y = v;
+    }
 }
