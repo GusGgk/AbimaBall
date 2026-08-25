@@ -39,7 +39,11 @@ public class TelaSelecao {
                 criarCard("Enaldo", "/com/game/sprites/enaldo.png", menuSelecao)
         );
 
-        telaSelecao.getChildren().addAll(titulo, containerJogadores);
+        Button voltar = new Button("VOLTAR");
+        voltar.getStyleClass().add("botao-card");
+        voltar.setOnAction(e -> menuSelecao.setScene(MenuPrincipal.criarCena(menuSelecao)));
+
+        telaSelecao.getChildren().addAll(titulo, containerJogadores, voltar);
         Scene scene = new Scene(telaSelecao, 1080,800);
         scene.getStylesheets().add(TelaSelecao.class.getResource("style.css").toExternalForm());
         return scene;
@@ -72,7 +76,7 @@ public class TelaSelecao {
                 System.out.println("CONFRONTO DEFINIDO: " + heroiP1 + " VS " + heroiP2);
 
                 // 3. Os dois escolheram! Criamos a cena do jogo passando as duas escolhas
-                Scene cenaDoJogo = TelaJogo.criarCena(heroiP1, heroiP2);
+                Scene cenaDoJogo = TelaJogo.criarCena(menuSelecao, heroiP1, heroiP2);
                 menuSelecao.setScene(cenaDoJogo);
             }
         });

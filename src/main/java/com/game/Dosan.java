@@ -8,11 +8,14 @@ public class Dosan extends PersonagemBase {
 
     @Override
     public void Poder() {
-        System.out.println("Soltando a fumaça da confusão");
+        System.out.println("Fumaça ninja: velocidade aumentada!");
+        this.velocidadeMovimentoAtual = 8.0;
+        this.forcaPuloAtual = -10.0;
     }
 
     @Override
     public void desativarPoder() {
-
+        this.velocidadeMovimentoAtual = this.velocidadeMovimentoBase;
+        this.forcaPuloAtual = this.forcaPulo;
     }
 }

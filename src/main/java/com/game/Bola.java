@@ -10,9 +10,10 @@ public class Bola {
     private double velocidadeX = 0;
     private double velocidadeY = 0;
 
-    private final double gravidade = 0.25;
-    private final double atrito_ar = 0.995;
-    private final double quique = -0.60;
+    private static final double GRAVIDADE = 0.25;
+    private static final double ATRITO_AR = 0.995;
+    private static final double QUIQUE = -0.60;
+    private static final double LARGURA_CAMPO = 1080;
     private final double raio = 20;
 
     private ImageView sprite;
@@ -23,8 +24,8 @@ public class Bola {
         this.x = xInicial;
         this.y = yInicial;
 
-        gifAnimado = new Image(getClass().getResourceAsStream("/com/game/sprites/bolagirando.gif"));
-        imagemParada = new Image(getClass().getResourceAsStream("/com/game/sprites/bola.png"));
+        gifAnimado = new Image(Bola.class.getResourceAsStream("/com/game/sprites/bolagirando.gif"));
+        imagemParada = new Image(Bola.class.getResourceAsStream("/com/game/sprites/bola.png"));
 
         sprite = new ImageView(imagemParada);
         sprite.setFitWidth(raio * 2);
@@ -36,11 +37,8 @@ public class Bola {
     }
 
     public void aplicarFisica(){
-        velocidadeY += gravidade;
-
-        // CORREÇÃO: O atrito multiplica a velocidade X para ir freando a bola aos poucos
-        velocidadeX *= atrito_ar;
-
+        velocidadeY += GRAVIDADE;
+        velocidadeX *= ATRITO_AR;
         x += velocidadeX;
         y += velocidadeY;
     }
@@ -50,20 +48,21 @@ public class Bola {
         if (y + (raio * 2) >= alturaDoChao){
             y = alturaDoChao - (raio * 2);
             if (velocidadeY > 0.6) {
-                velocidadeY = velocidadeY * quique;
+                velocidadeY = velocidadeY * QUIQUE;
             } else {
                 velocidadeY = 0;
             }
         }
 
-        // Colisão com as paredes laterais (evita a bola sumir da tela)
+    }
+
+    public void quicarParedes() {
         if (x < 0) {
             x = 0;
-            velocidadeX = -velocidadeX * 0.8; // Quica na parede esquerda
-        }
-        if (x + (raio * 2) > 1080) { // 1080 é a largura da sua tela
-            x = 1080 - (raio * 2);
-            velocidadeX = -velocidadeX * 0.8; // Quica na parede direita
+            velocidadeX = Math.abs(velocidadeX) * 0.8;
+        } else if (x + getDiametro() > LARGURA_CAMPO) {
+            x = LARGURA_CAMPO - getDiametro();
+            velocidadeX = -Math.abs(velocidadeX) * 0.8;
         }
     }
 
@@ -91,6 +90,10 @@ public class Bola {
         return raio;
     }
 
+    public double getDiametro() {
+        return raio * 2;
+    }
+
     // CORREÇÃO: Agora os métodos realmente alteram os valores da bola!
     public void setVelocidadeX(double v) {
         this.velocidadeX = v;
@@ -106,5 +109,13 @@ public class Bola {
 
     public void setY(double v) {
         this.y = v;
+    }
+
+    public double getVelocidadeY() {
+        return velocidadeY;
+    }
+
+    public double getVelocidadeX(){
+        return velocidadeX;
     }
 }

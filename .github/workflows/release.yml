@@ -1,0 +1,52 @@
+name: Build do jogo
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Testar e gerar JAR
+        shell: pwsh
+        run: .\mvnw.cmd --batch-mode clean package
+
+      - name: Montar aplicativo portátil
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package-input | Out-Null
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item target\ABIMABALL.jar package-input\ABIMABALL.jar
+          jpackage --type app-image --dest dist --input package-input --name ABIMABALL --main-jar ABIMABALL.jar --main-class com.game.Main --app-version 1.0.0 --vendor ABIMABALL
+          Compress-Archive -Path dist\ABIMABALL -DestinationPath dist\ABIMABALL-Windows.zip
+
+      - name: Disponibilizar download da build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ABIMABALL-Windows
+          path: dist/ABIMABALL-Windows.zip
+
+      - name: Publicar GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist\ABIMABALL-Windows.zip --generate-notes --title "ABIMABALL ${{ github.ref_name }}"
