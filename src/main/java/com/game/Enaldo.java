@@ -8,11 +8,14 @@ public class Enaldo extends PersonagemBase{
 
     @Override
     public void Poder() {
-        System.out.println("Deixando adversário sonolento");
+        System.out.println("Modo lenda: mais velocidade e impulsão!");
+        this.velocidadeMovimentoAtual = 7.0;
+        this.forcaPuloAtual = -12.0;
     }
 
     @Override
     public void desativarPoder() {
-
+        this.velocidadeMovimentoAtual = this.velocidadeMovimentoBase;
+        this.forcaPuloAtual = this.forcaPulo;
     }
 }

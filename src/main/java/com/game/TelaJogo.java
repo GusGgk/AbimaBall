@@ -1,84 +1,145 @@
 package com.game;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class TelaJogo {
+public final class TelaJogo {
+    private TelaJogo() {
+    }
 
-    public static Scene criarCena(String p1Escolhido, String p2Escolhido) {
-        Pane campoJogo = new Pane();
-        campoJogo.getStyleClass().add("fundo-jogo");
+    public static Scene criarCena(Stage palco, String p1Escolhido, String p2Escolhido) {
+        Pane campo = new Pane();
+        campo.getStyleClass().add("fundo-jogo");
+        adicionarGols(campo);
 
-        Image imgGol = new Image(TelaJogo.class.getResourceAsStream("/com/game/sprites/gol.png"));
-
-        double chaoVisual = 500;
-        double personagemAltura = 120;
-
-        // Gol Esquerdo
-        ImageView spriteGolEsquerdo = new ImageView(imgGol);
-        spriteGolEsquerdo.setFitHeight(260);
-        spriteGolEsquerdo.setPreserveRatio(true);
-        spriteGolEsquerdo.setSmooth(false);
-        spriteGolEsquerdo.setTranslateX(-150);
-        spriteGolEsquerdo.setTranslateY(390);
-
-        // Gol Direito
-        ImageView spriteGolDireito = new ImageView(imgGol);
-        spriteGolDireito.setFitHeight(260);
-        spriteGolDireito.setPreserveRatio(true);
-        spriteGolDireito.setSmooth(false);
-        spriteGolDireito.setTranslateX(950);
-        spriteGolDireito.setTranslateY(390);
-        spriteGolDireito.setScaleX(-1);
-
-        Bola bolaPrincipal = new Bola(500, 50);
-
-        // Player 1 (Esquerda)
+        Bola bola = new Bola(520, 90);
         PersonagemBase jogador1 = carregarPersonagem(p1Escolhido);
-        jogador1.setX(100);
+        jogador1.setX(150);
         jogador1.setY(500);
-
-        // Player 2 (Direita)
         PersonagemBase jogador2 = carregarPersonagem(p2Escolhido);
-        jogador2.setX(800);
+        jogador2.setX(810);
         jogador2.setY(500);
-        jogador2.getSprite().setScaleX(-1); //espelho
+        jogador2.getSprite().setScaleX(-1);
 
-        campoJogo.getChildren().addAll(
-                spriteGolEsquerdo,
-                spriteGolDireito,
-                jogador1.getSprite(),
-                jogador2.getSprite(),
-                bolaPrincipal.getSprite()
-        );
+        campo.getChildren().addAll(jogador1.getSprite(), jogador2.getSprite(), bola.getSprite());
 
-        Scene scene = new Scene(campoJogo, 1080, 800);
-        scene.getStylesheets().add(TelaJogo.class.getResource("style.css").toExternalForm());
+        Label placar = new Label();
+        Label tempo = new Label();
+        placar.getStyleClass().add("placar");
+        tempo.getStyleClass().add("cronometro");
+        HBox topo = new HBox(30, placar, tempo);
+        topo.setAlignment(Pos.TOP_CENTER);
+        topo.setPadding(new Insets(20));
 
-        GerenciadorTeclado.configurar(scene);
+        Label controles = new Label("P1  A/D mover  W pular  C chutar  S poder     |     P2  ←/→ mover  ↑ pular  ESPAÇO chutar  ↓ poder     |     ESC pausa");
+        controles.getStyleClass().add("controles-jogo");
+        BorderPane hud = new BorderPane();
+        hud.setTop(topo);
+        hud.setBottom(controles);
+        BorderPane.setAlignment(controles, Pos.CENTER);
+        BorderPane.setMargin(controles, new Insets(0, 0, 18, 0));
+        hud.setMouseTransparent(true);
 
-        //Forca pedido de uso de teclado
-        Platform.runLater(() -> campoJogo.requestFocus());
+        VBox pausa = criarPainel("PAUSADO", "Pressione ESC para continuar");
+        pausa.setVisible(false);
 
-        MotorPartida motor = new MotorPartida(bolaPrincipal, jogador1, jogador2);
+        VBox resultado = criarPainel("FIM DE JOGO", "");
+        Label mensagemResultado = (Label) resultado.getChildren().get(1);
+        Button revanche = new Button("REVANCHE");
+        Button menu = new Button("MENU PRINCIPAL");
+        revanche.getStyleClass().add("botao-menu");
+        menu.getStyleClass().add("botao-menu");
+        revanche.setOnAction(e -> palco.setScene(criarCena(palco, p1Escolhido, p2Escolhido)));
+        menu.setOnAction(e -> palco.setScene(MenuPrincipal.criarCena(palco)));
+        resultado.getChildren().addAll(revanche, menu);
+        resultado.setVisible(false);
+
+        StackPane raiz = new StackPane(campo, hud, pausa, resultado);
+        Scene cena = new Scene(raiz, 1080, 800);
+        cena.getStylesheets().add(TelaJogo.class.getResource("style.css").toExternalForm());
+        GerenciadorTeclado.configurar(cena);
+
+        MotorPartida[] referenciaMotor = new MotorPartida[1];
+        Runnable atualizarHud = () -> {
+            EstadoPartida estado = referenciaMotor[0].getEstado();
+            placar.setText(p1Escolhido + "  " + estado.getGolsP1() + "  x  " + estado.getGolsP2() + "  " + p2Escolhido);
+            tempo.setText(estado.getTempoFormatado());
+        };
+        Runnable terminar = () -> {
+            EstadoPartida estado = referenciaMotor[0].getEstado();
+            mensagemResultado.setText(estado.getVencedor() == 0
+                    ? "EMPATE!"
+                    : "PLAYER " + estado.getVencedor() + " VENCEU!");
+            resultado.setVisible(true);
+        };
+
+        MotorPartida motor = new MotorPartida(bola, jogador1, jogador2, atualizarHud, terminar);
+        referenciaMotor[0] = motor;
+        atualizarHud.run();
+
+        cena.setOnKeyPressed(evento -> {
+            if (evento.getCode() == KeyCode.ESCAPE && !resultado.isVisible()) {
+                motor.setPausado(!motor.isPausado());
+                pausa.setVisible(motor.isPausado());
+                evento.consume();
+            }
+        });
+        palco.setOnCloseRequest(e -> motor.stop());
+        Platform.runLater(raiz::requestFocus);
         motor.start();
+        return cena;
+    }
 
-        return scene; // encerra a criação da tela
+    private static void adicionarGols(Pane campo) {
+        Image imagemGol = new Image(TelaJogo.class.getResourceAsStream("/com/game/sprites/gol.png"));
+        ImageView esquerdo = criarGol(imagemGol, -190, 390, false);
+        ImageView direito = criarGol(imagemGol, 1010, 390, true);
+        campo.getChildren().addAll(esquerdo, direito);
+    }
+
+    private static ImageView criarGol(Image imagem, double x, double y, boolean espelhado) {
+        ImageView gol = new ImageView(imagem);
+        gol.setFitHeight(260);
+        gol.setPreserveRatio(true);
+        gol.setSmooth(false);
+        gol.setTranslateX(x);
+        gol.setTranslateY(y);
+        if (espelhado) gol.setScaleX(-1);
+        return gol;
+    }
+
+    private static VBox criarPainel(String titulo, String subtitulo) {
+        Label labelTitulo = new Label(titulo);
+        Label labelSubtitulo = new Label(subtitulo);
+        labelTitulo.getStyleClass().add("titulo-overlay");
+        labelSubtitulo.getStyleClass().add("subtitulo-overlay");
+        VBox painel = new VBox(24, labelTitulo, labelSubtitulo);
+        painel.setAlignment(Pos.CENTER);
+        painel.setMaxSize(620, 440);
+        painel.getStyleClass().add("painel-overlay");
+        return painel;
     }
 
     private static PersonagemBase carregarPersonagem(String nome) {
-        switch (nome) {
-            case "Gk": return new Gk();
-            case "Edu": return new Edu();
-            case "DosanCodes": return new Dosan();
-            case "Enaldo": return new Enaldo();
-            case "Gritten":
-                return new Gritten();
-            default:
-                return new Gk();
-        }
+        return switch (nome) {
+            case "Edu" -> new Edu();
+            case "DosanCodes" -> new Dosan();
+            case "Enaldo" -> new Enaldo();
+            case "Gritten" -> new Gritten();
+            default -> new Gk();
+        };
     }
 }

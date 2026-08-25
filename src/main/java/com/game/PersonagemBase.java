@@ -4,8 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public abstract class PersonagemBase {
-    private String nome;
-    private int numeroCamisa;
+    private final String nome;
+    private final int numeroCamisa;
 
     protected double margemPe = 0;
 
@@ -14,7 +14,6 @@ public abstract class PersonagemBase {
     protected double velocidadeY = 0;
     protected double velocidadeX = 0;
 
-    protected double velocidadeMovimento;
     protected double velocidadeMovimentoBase;
     protected double velocidadeMovimentoAtual;
 
@@ -40,9 +39,7 @@ public abstract class PersonagemBase {
     public PersonagemBase(String nome, int numeroCamisa, double velocidadeMovimento, String caminhoSprite) {
         this.nome = nome;
         this.numeroCamisa = numeroCamisa;
-        this.velocidadeMovimento = velocidadeMovimento;
-
-        this.imagemOriginal = new Image(getClass().getResourceAsStream(caminhoSprite));
+        this.imagemOriginal = new Image(PersonagemBase.class.getResourceAsStream(caminhoSprite));
         this.sprite = new ImageView(imagemOriginal);
 
         // Pixels configurados
@@ -50,8 +47,8 @@ public abstract class PersonagemBase {
         this.sprite.setFitHeight(120);
         this.sprite.setPreserveRatio(true);
 
-        this.velocidadeMovimentoBase = this.velocidadeMovimento;
-        this.velocidadeMovimentoAtual = this.velocidadeMovimento;
+        this.velocidadeMovimentoBase = velocidadeMovimento;
+        this.velocidadeMovimentoAtual = velocidadeMovimento;
         this.alturaPersonagemAtual = this.alturaPersonagem;
         this.forcaPuloAtual = this.forcaPulo;
 
@@ -105,6 +102,15 @@ public abstract class PersonagemBase {
         }
     }
 
+    public void reiniciarEstado() {
+        if (poderAtivo) {
+            poderAtivo = false;
+            desativarPoder();
+        }
+        velocidadeX = 0;
+        velocidadeY = 0;
+    }
+
     public void chutar(){
         System.out.println(getNome() + " deu um chute no gol!");
     }
@@ -124,6 +130,10 @@ public abstract class PersonagemBase {
     }
     public String getNome() {
         return nome;
+    }
+
+    public int getNumeroCamisa() {
+        return numeroCamisa;
     }
 
     public ImageView getSprite(){
@@ -158,6 +168,7 @@ public abstract class PersonagemBase {
 
 
 
-    public void setScaleX(int i) {
+    public double getLargura() {
+        return sprite.getBoundsInLocal().getWidth();
     }
 }
